@@ -59,7 +59,7 @@ To give an illustration on how to create an attribute configuration file, suppos
   },
   "status": {
     "type": "nominal",
-    "labes": [
+    "labels": [
       "0", 
       "1"
     ]
