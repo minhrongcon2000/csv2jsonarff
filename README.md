@@ -50,7 +50,3 @@ public class Demo {
 }
 
 ```
-
-## TODO
-
-Convert to JSON readable by Weka explorer
