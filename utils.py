@@ -29,12 +29,12 @@ def getHeaderObj(relationname, attribute_conf):
     }
 
 
-def formatData(path):
+def formatData(path, delimiter=','):
     print("format dataset...")
     data = []
     with open(path, 'r') as f:
         for line in tqdm(f, total=get_num_lines(path)):
-            values = line.strip().split("\t")
+            values = line.strip().split(delimiter)
             data.append({
                 "sparse": False,
                 "weight": 1.0,
@@ -44,7 +44,7 @@ def formatData(path):
     return data
 
 
-def csv2arffjson(path, attr_conf, relationname='wekadata'):
+def csv2arffjson(path, attr_conf, relationname='wekadata', delimiter=','):
     return {
         "header": getHeaderObj(relationname, attr_conf),
         "data": formatData(path)
