@@ -24,29 +24,26 @@ _Note:_ Configuration file is a json file with following format.
 
 ```JSON
 {
-  [attribute 1's name]: {
-    type: [attribute 1's type],
-    labels?: [list of possible values]
+  "[attribute 1's name]": {
+    "type": ["attribute 1's type"],
+    "labels"?: ["list of possible values"]
   },
   ...
 }
 ```
 
-where attribute type follows the ARFF standard of weka. ``labels`` is only compulsory when an attribute is nominal. Read weka manual for more information.
+where attribute type follows the ARFF standard of weka. ``labels`` is optional and only compulsory when an attribute is nominal. Read weka manual for more information.
 
-## How to read JSON in Weka
+For example, suppose we want to predict whether a person has diabetes based on their weight and suppose further that we collected our dataset with two attributes: weight and status, in which 1 corresponds to having diabetes and 0 corresponds to reverse case. Then the attribute configuration file should be as follow:
 
-Unfortunately, in some cases, the JSON format cannot be read by Weka Explorer, even though it can be read using Weka API. Hence, the only way to read the JSON file is via the API. Here is one example of reading JSON file using Weka API (suppose that you have setup your project properly with weka.jar as library file):
-
-```Java
-import weka.core.Instances;
-import weka.core.converters.ConverterUtils;
-
-public class Demo {
-    public static void main(String[] args) throws Exception {
-        Instances data = ConverterUtils.DataSource.read("/path/to/json_file.json");
-        System.out.println(data);
-    }
+```JSON
+{
+  "weight": {
+    "type": "numeric"
+  },
+  "status": {
+    "type": "nominal",
+    "labes": ["0", "1"]
+  }
 }
-
 ```
