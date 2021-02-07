@@ -30,7 +30,7 @@ Attribute configuration file is a json file that describes the type of each attr
 ```JSON
 {
   "[attribute 1's name]": {
-    "type": ["attribute 1's type"],
+    "type": "attribute 1's type",
     "labels"?: ["list of possible values"]
   },
   ...
