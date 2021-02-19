@@ -72,11 +72,11 @@ To give an illustration on how to create an attribute configuration file, suppos
 ```JSON
 [
   {
-    "name": "weight" 
-    "type": "float",
+    "name": "weight",
+    "type": "float"
   },
   {
-    "name": "status" 
+    "name": "status", 
     "type": "nominal",
     "labels": [0, 1]
   }
