@@ -1,6 +1,7 @@
 import json
 from tqdm import tqdm
 import mmap
+import re
 
 
 def get_num_lines(file_path):
@@ -35,7 +36,7 @@ def isDataAttributeConsistent(attribute_conf, input_path, delimiter=','):
         for line in f:
             if len(line.split(delimiter)) != len(attribute_conf):
                 raise Exception(
-                    'Inconsistency detected between data and attribute config')
+                    'Inconsistency detected between data and attribute config: {} != {}'.format(len(line.split(delimiter)), len(attribute_conf)))
 
 
 def getHeaderObj(relationname, attribute_conf):
@@ -51,21 +52,20 @@ def getHeaderObj(relationname, attribute_conf):
     print("Generating header...")
 
     def getAttrObj(attr_info):
-        attr_name, attr_type = attr_info
         attr_obj = {
-            "name": attr_name,
-            "type": attr_type["type"],
+            "name": attr_info['name'],
+            "type": attr_info["type"],
             "class": False,
             "weight": 1.0
         }
 
-        if attr_type['type'] == 'nominal':
-            attr_obj['labels'] = attr_type['labels']
+        if attr_info['type'] == 'nominal':
+            attr_obj['labels'] = attr_info['labels']
         return attr_obj
 
     return {
         "relation": relationname,
-        "attributes": list(map(getAttrObj, attribute_conf.items()))
+        "attributes": list(map(getAttrObj, attribute_conf))
     }
 
 
@@ -110,3 +110,32 @@ def csv2arffjson(path, attr_conf, relationname='wekadata', delimiter=','):
         "header": getHeaderObj(relationname, attr_conf),
         "data": formatData(path, delimiter)
     }
+
+
+def processed_string_data(sentence):
+    return '"{}"'.format(re.sub("\"", "'", sentence))
+
+
+def csv2arff(src, dest, attr_conf, relationname='wekadata', delimiter=','):
+    with open(dest, "w") as output_file:
+        print("Writing header...")
+        output_file.write("@relation {}\n\n".format(relationname))
+        for attr_info in tqdm(attr_conf):
+            if attr_info["type"] != "nominal":
+                output_file.write(
+                    f'@attribute {attr_info["name"]} {attr_info["type"]}\n')
+            else:
+                label_output = str(attr_info["labels"]).replace(
+                    '[', '{').replace(']', '}')
+                output_file.write(
+                    f'@attribute {attr_info["name"]} {label_output}\n')
+        output_file.write('\n@data\n')
+        with open(src, "r") as input_file:
+            print("Writing data...")
+            for line in tqdm(input_file, total=get_num_lines(src)):
+                instance = line.strip().split(delimiter)
+                for i in range(len(instance)):
+                    if attr_conf[i]["type"] == 'string':
+                        instance[i] = processed_string_data(instance[i])
+                output_file.write(','.join(map(str, instance)))
+                output_file.write('\n')

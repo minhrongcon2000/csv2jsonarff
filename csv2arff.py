@@ -1,5 +1,5 @@
 import argparse
-from utils import csv2arffjson, csv2arff
+from utils import csv2arff
 import json
 import shutil
 
@@ -51,5 +51,4 @@ with open(args.conf, "r") as f:
 
 # save json file to specified path
 with open(dest, "w") as f:
-    json.dump(csv2arffjson(
-        src, config, relationname=relationname, delimiter=delimiter), f, indent=4)
+    csv2arff(src, dest, config, relationname=relationname, delimiter=delimiter)
