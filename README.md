@@ -43,12 +43,12 @@ Attribute configuration file is a JSON file that describes attributes. The file 
 ```JSON
 [
   {
-    "name": "[attribute 1's name]" 
+    "name": "[attribute 1's name]",
     "type": "attribute 1's type",
     "labels": ["list of possible values"]
   },
   {
-    "name": "[attribute 2's name]" 
+    "name": "[attribute 2's name]",
     "type": "attribute 2's type",
     "labels": ["list of possible values"]
   },
