@@ -41,23 +41,16 @@ For how to make a configuration file for ``-conf``, please check the following s
 Attribute configuration file is a JSON file that describes attributes. The file is needed since Java is a strongly-typed programming language, so every attribute needs to be clearly declared. The file should have the following format
 
 ```JSON
-<<<<<<< HEAD
 [
   {
-    "name": "[attribute 1's name]" 
+    "name": "[attribute 1's name]",
     "type": "attribute 1's type",
     "labels": ["list of possible values"]
   },
   {
-    "name": "[attribute 2's name]" 
+    "name": "[attribute 2's name]",
     "type": "attribute 2's type",
     "labels": ["list of possible values"]
-=======
-{
-  "[attribute 1's name]": {
-    "type": "attribute 1's type",
-    "labels"?: ["list of possible values"]
->>>>>>> main
   },
   ...
 ]
@@ -79,11 +72,11 @@ To give an illustration on how to create an attribute configuration file, suppos
 ```JSON
 [
   {
-    "name": "weight" 
-    "type": "float",
+    "name": "weight",
+    "type": "float"
   },
   {
-    "name": "status" 
+    "name": "status", 
     "type": "nominal",
     "labels": [0, 1]
   }
