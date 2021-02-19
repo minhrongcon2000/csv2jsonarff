@@ -113,10 +113,27 @@ def csv2arffjson(path, attr_conf, relationname='wekadata', delimiter=','):
 
 
 def processed_string_data(sentence):
+    """replace " with '
+
+    Args:
+        sentence (str): string of characters
+
+    Returns:
+        str: original string put in "" with all internal " replaced with '
+    """
     return '"{}"'.format(re.sub("\"", "'", sentence))
 
 
 def csv2arff(src, dest, attr_conf, relationname='wekadata', delimiter=','):
+    """convert csv to arff
+
+    Args:
+        src (str): path to csv source file
+        dest (str): path to store designated arff file
+        attr_conf (str): path to configuration file
+        relationname (str, optional): name of relation. Defaults to 'wekadata'.
+        delimiter (str, optional): field delimiter. Defaults to ','.
+    """
     with open(dest, "w") as output_file:
         print("Writing header...")
         output_file.write("@relation {}\n\n".format(relationname))
