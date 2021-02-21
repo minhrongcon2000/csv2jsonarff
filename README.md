@@ -21,20 +21,31 @@ TL;DR, do the following four steps:
 5. Run the desire file. For example, in the case of csv2arff.py, the command should be
 
 ```bash
-python3 csv2jsonarff.py -i /path/to/csv_file.csv -o /path/to/output_json_file.json -conf /path/to/attr_config.json
+python3 csv2jsonarff.py -i /path/to/csv_file.csv -o /path/to/output_json_file.json -conf /path/to/attr_config.json -delim 'field_delimiter'
 ```
 
 Every methods is guaranteed to have the same types of flags. Those flags are
 
-```
-  -i      path to csv file
-  -o      path to output json file
-  -conf   path to json configuration file
-  -rname  Optional. Name of relation you want to store. Default to wekadata
-  -delim  Optional. Delimiter of csv file. Default to ','
+```bash
+python3 csv2arff.py -h 
+usage: csv2arff.py [-h] [-i I] [-o O] [-conf CONF] [-rname RNAME]
+                   [-delim DELIM]
+
+Converting csv (with any delimiter) to json so that Weka can read
+
+optional arguments:
+  -h, --help    show this help message and exit
+  -i I          path to csv file
+  -o O          path to output json file
+  -conf CONF    a json file containing attribute configuration
+  -rname RNAME  Optional. Name of relation you want to store. Default to
+                wekadata
+  -delim DELIM  Optional. Delimiter of csv file. Default to ,
 ```
 
-For how to make a configuration file for ``-conf``, please check the following section, and for how to input tab into terminal, please press ``Ctrl + V`` before press ``Tab``.
+Please remember that for delimiter, always put it between two quotation marks. We know that delimiter can also be updated, so we allow developers to add more delimiter into ``input2special_char.json``, whose keys are user's possible inputs and values are corresponding special character in Python.
+
+For how to make configuration file, please check the next section.
 
 ### How to make attribute configuration file
 

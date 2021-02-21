@@ -2,6 +2,7 @@ import json
 from tqdm import tqdm
 import mmap
 import re
+import argparse
 
 
 def get_num_lines(file_path):
@@ -39,6 +40,8 @@ def isDataAttributeConsistent(attribute_conf, input_path, delimiter=','):
                     'Inconsistency detected between data and attribute config: {} != {}'.format(len(line.split(delimiter)), len(attribute_conf)))
 
 
+# code for converting csv to json
+# =====================================================================
 def getHeaderObj(relationname, attribute_conf):
     """Generate header of ARFF file in JSON format
 
@@ -110,6 +113,10 @@ def csv2arffjson(path, attr_conf, relationname='wekadata', delimiter=','):
         "header": getHeaderObj(relationname, attr_conf),
         "data": formatData(path, delimiter)
     }
+# =====================================================================
+
+# code for converting csv to json
+# =====================================================================
 
 
 def processed_string_data(sentence):
@@ -134,9 +141,15 @@ def csv2arff(src, dest, attr_conf, relationname='wekadata', delimiter=','):
         relationname (str, optional): name of relation. Defaults to 'wekadata'.
         delimiter (str, optional): field delimiter. Defaults to ','.
     """
+    # check consistency between config file and csv file
+    isDataAttributeConsistent(attr_conf, src, delimiter=delimiter)
+
     with open(dest, "w") as output_file:
+        # writing header of arff file
         print("Writing header...")
+
         output_file.write("@relation {}\n\n".format(relationname))
+
         for attr_info in tqdm(attr_conf):
             if attr_info["type"] != "nominal":
                 output_file.write(
@@ -146,6 +159,8 @@ def csv2arff(src, dest, attr_conf, relationname='wekadata', delimiter=','):
                     '[', '{').replace(']', '}')
                 output_file.write(
                     f'@attribute {attr_info["name"]} {label_output}\n')
+
+        # writing actual data of arff file
         output_file.write('\n@data\n')
         with open(src, "r") as input_file:
             print("Writing data...")
@@ -156,3 +171,48 @@ def csv2arff(src, dest, attr_conf, relationname='wekadata', delimiter=','):
                         instance[i] = processed_string_data(instance[i])
                 output_file.write(','.join(map(str, instance)))
                 output_file.write('\n')
+
+
+def parse_args():
+    # Load input-special-character converter
+    input2special_char = json.load(open("input2special_char.json", "r"))
+
+    parser = argparse.ArgumentParser(
+        description="Converting csv (with any delimiter) to json so that Weka can read")
+
+    # arguments and documents
+    parser.add_argument("-i", help="path to csv file")
+    parser.add_argument("-o", help="path to output json file")
+    parser.add_argument(
+        "-conf", help="a json file containing attribute configuration")
+    parser.add_argument(
+        "-rname", help="Optional. Name of relation you want to store. Default to wekadata")
+    parser.add_argument(
+        "-delim",
+        help="Optional. Delimiter of csv file. Default to ,"
+    )
+
+    # get input from argument flags
+    args = parser.parse_args()
+
+    # retrieve path to csv file, output json file, configuration file, dataset's name, and delimiter
+    src = args.i
+    dest = args.o
+    conf_path = args.conf
+    relationname = args.rname if args.rname is not None else 'wekadata'
+    delimiter = args.delim if args.delim is not None else ','
+
+    if src is None:
+        raise Exception("Source file needs providing.")
+
+    if dest is None:
+        raise Exception("Please provide json file name.")
+
+    if conf_path is None:
+        raise Exception("Attribute configuration is needed.")
+
+    if delimiter not in input2special_char:
+        raise Exception(
+            "Delimiter not supported, please add it to input2special_character.json")
+
+    return src, dest, conf_path, relationname, input2special_char[delimiter]
