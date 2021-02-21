@@ -12,7 +12,7 @@ Weka is a Machine Learning library written in Java whose goal is mainly for rese
 
 ## Usage
 
-TL;DR, do the following four steps:
+TL;DR, do the following 5 steps:
 
 1. Clone this repo
 2. Install tqdm via pip (just for nice progress bar visualization xD)
